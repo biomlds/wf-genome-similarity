@@ -24,29 +24,20 @@ More information on running EPI2ME workflows can
 be found in the
 [documentation](https://epi2me.nanoporetech.com/epi2me-docs/wfquickstart/).
 
-The following command can be used to obtain the workflow.
-This will pull the repository in to the assets folder of
-Nextflow and provide a list of all parameters
-available for the workflow as well as an example command:
+### Requirements
+
++ Nextflow
++ Docker or Singularity
++ The `mentalist:ONT-1.0.0-withEnterobase` container
+
+### Example usage
+
+Run the workflow with an input directory containing `*.medaka.fasta.gz` files:
 
 ```
-nextflow run epi2me-labs/wf-template --help
-```
-To update a workflow to the latest version on the command line use
-the following command:
-```
-nextflow pull epi2me-labs/wf-template
-```
-
-A demo dataset is provided for testing of the workflow.
-It can be downloaded and unpacked using the following commands:
-```
-wget https://ont-exd-int-s3-euwst1-epi2me-labs.s3.amazonaws.com/wf-template/wf-template-demo.tar.gz
-tar -xzvf wf-template-demo.tar.gz
-```
-The workflow can then be run with the downloaded demo data using:
-```
-nextflow run epi2me-labs/wf-template \
-	--fastq 'wf-template-demo/test_data/reads.fastq.gz' \
-	-profile standard
+nextflow run main.nf \
+    --input /path/to/assemblies \
+    --project_name my_project \
+    --out_dir /path/to/output \
+    -profile standard
 ```

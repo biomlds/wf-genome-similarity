@@ -1,4 +1,11 @@
-<!---High level numbered list of main steps of the workflow and hyperlink to any tools used. If multiple workflows/different modes perhaps have subheadings and numbered steps. Use nested numbering or bullets where required.--->
-### 1. Concatenates input files and generate per read stats.
+### 1. Preprocess medaka files
 
-The [fastcat/bamstats](https://github.com/epi2me-labs/fastcat) tool is used to concatenate multifile samples to be processed by the workflow. It will also output per read stats including average read lengths and qualities.
+The workflow checks for `*.medaka.fasta.gz` files and uncompresses them only when the corresponding `*.medaka.fasta` file does not already exist. This ensures existing assembly files are never overwritten.
+
+### 2. Run mentalist
+
+The [mentalist](https://github.com/rrwick/mentalist) container is executed to compute pairwise Jaccard similarity scores between all genome assemblies in the input directory.
+
+### 3. Output results
+
+The workflow produces a `jaccard_score.csv` file containing the pairwise similarity matrix.
