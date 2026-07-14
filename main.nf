@@ -1,12 +1,18 @@
-#!/usr/bin/env nextflow
+import groovy.json.JsonBuilder
 nextflow.enable.dsl = 2
 
-params {
-    help = false
-    input = null
-    out_dir = "output"
-    project_name = "genome_similarity"
-}
+include {
+    getParams;
+} from './lib/common'
+
+
+
+// params {
+//     help = false
+//     input = null
+//     out_dir = "output"
+//     project_name = "genome_similarity"
+// }
 
 
 // Process 1: Preprocess medaka files
