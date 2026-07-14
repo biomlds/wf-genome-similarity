@@ -56,7 +56,7 @@ process runMentalist {
     podman run --rm \\
       --userns=keep-id \\
       --user "\$(id -u):\$(id -g)" \\
-      -v "${preprocessed_dir}":/data/input:ro \\
+      -v "\$PWD/preprocessed":/data/input:ro \\
       -v "\$PWD/output_mount":/data/output:rw \\
       mentalist:ONT-1.0.0-withEnterobase "${params.project_name}"
 
