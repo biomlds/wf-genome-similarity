@@ -1,18 +1,4 @@
-import groovy.json.JsonBuilder
 nextflow.enable.dsl = 2
-
-include {
-    getParams;
-} from './lib/common'
-
-
-
-// params {
-//     help = false
-//     input = null
-//     out_dir = "output"
-//     project_name = "genome_similarity"
-// }
 
 
 // Process 1: Preprocess medaka files
@@ -50,43 +36,15 @@ process preprocessMedakaFiles {
 
 
 // Process 2: Run mentalist container
-// runMentalist V1
-// process runMentalist {
-//     label "mentalist"
-//     publishDir "${params.out_dir}", mode: 'copy', pattern: "jaccard_score.csv"
-
-//     input:
-//         path preprocessed_dir
-
-//     output:
-//         path "jaccard_score.csv"
-
-//     script:
-//     """
-//     # Stage preprocessed files into /data/input
-//     cp -r $preprocessed_dir/* /data/input/
-
-//     # Run mentalist with project name
-//     mentalist "$params.project_name"
-
-//     # Copy results
-//     cp /data/output/jaccard_score.csv .
-//     """
-// }
-
-
 process runMentalist {
-
-    tag "${project_name}"
-
+    tag "${params.project_name}"
     publishDir "${params.out_dir}/${params.project_name}", mode: 'copy', overwrite: true
 
     input:
-    val input_folder_path
-    val project_name
+        path preprocessed_dir
 
     output:
-    path "results", emit: results
+        path "results", emit: results
 
     script:
     """
@@ -98,13 +56,15 @@ process runMentalist {
     podman run --rm \\
       --userns=keep-id \\
       --user "\$(id -u):\$(id -g)" \\
-      -v "${input_folder_path}":/data/input:ro \\
+      -v "${preprocessed_dir}":/data/input:ro \\
       -v "\$PWD/output_mount":/data/output:rw \\
-      mentalist:ONT-1.0.0-withEnterobase "${project_name}"
+      mentalist:ONT-1.0.0-withEnterobase "${params.project_name}"
 
     cp -a output_mount/. results/
     """
 }
+
+
 
 // Main workflow
 workflow {
@@ -124,4 +84,9 @@ workflow {
 
     preprocessMedakaFiles(params.input)
     runMentalist(preprocessMedakaFiles.out)
+    
+    runMentalist.out.results
+        .subscribe { results ->
+            println "Results published to: ${params.out_dir}/${params.project_name}"
+        }
 }
