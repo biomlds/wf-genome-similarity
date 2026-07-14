@@ -4,7 +4,7 @@
     "title": "Genome Similarity Workflow",
     "workflow_title": "Genome Similarity Analysis",
     "description": "EPI2ME workflow for genome similarity analysis using mentalist. Processes compressed genome assemblies (*.medaka.fasta.gz) and computes pairwise Jaccard similarity scores.",
-    "url": "https://github.com/epi2me-labs/wf-template",
+    "url": "https://github.com/biomlds/wf-genome-similarity",
     "type": "object",
     "definitions": {
         "input": {
