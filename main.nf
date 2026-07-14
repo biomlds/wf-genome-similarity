@@ -50,29 +50,61 @@ process preprocessMedakaFiles {
 
 
 // Process 2: Run mentalist container
+// runMentalist V1
+// process runMentalist {
+//     label "mentalist"
+//     publishDir "${params.out_dir}", mode: 'copy', pattern: "jaccard_score.csv"
+
+//     input:
+//         path preprocessed_dir
+
+//     output:
+//         path "jaccard_score.csv"
+
+//     script:
+//     """
+//     # Stage preprocessed files into /data/input
+//     cp -r $preprocessed_dir/* /data/input/
+
+//     # Run mentalist with project name
+//     mentalist "$params.project_name"
+
+//     # Copy results
+//     cp /data/output/jaccard_score.csv .
+//     """
+// }
+
+
 process runMentalist {
-    label "mentalist"
-    publishDir "${params.out_dir}", mode: 'copy', pattern: "jaccard_score.csv"
+
+    tag "${project_name}"
+
+    publishDir "${params.out_dir}/${params.project_name}", mode: 'copy', overwrite: true
 
     input:
-        path preprocessed_dir
+    val input_folder_path
+    val project_name
 
     output:
-        path "jaccard_score.csv"
+    path "results", emit: results
 
     script:
     """
-    # Stage preprocessed files into /data/input
-    cp -r $preprocessed_dir/* /data/input/
+    set -euo pipefail
 
-    # Run mentalist with project name
-    mentalist "$params.project_name"
+    mkdir -p output_mount
+    mkdir -p results
 
-    # Copy results
-    cp /data/output/jaccard_score.csv .
+    podman run --rm \\
+      --userns=keep-id \\
+      --user "\$(id -u):\$(id -g)" \\
+      -v "${input_folder_path}":/data/input:ro \\
+      -v "\$PWD/output_mount":/data/output:rw \\
+      mentalist:ONT-1.0.0-withEnterobase "${project_name}"
+
+    cp -a output_mount/. results/
     """
 }
-
 
 // Main workflow
 workflow {
