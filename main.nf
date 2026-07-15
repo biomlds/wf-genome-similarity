@@ -76,7 +76,8 @@ process getVersions {
 
     script:
     """
-    python3 -c "import pandas; print(f'pandas,{pandas.__version__}')" >> versions.txt
+    echo "nextflow,\$(nextflow -v | grep version | awk '{print \$2}')" >> versions.txt
+    echo "podman,\$(podman --version | awk '{print \$2}')" >> versions.txt
     """
 }
 
