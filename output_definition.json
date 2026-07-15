@@ -1,10 +1,26 @@
 {
     "files": {
         "jaccard-scores": {
-            "filepath": "jaccard_score.csv",
+            "filepath": "*/jaccard_score.tsv",
             "title": "Jaccard Similarity Scores",
-            "description": "Pairwise Jaccard similarity scores between genome assemblies.",
-            "mime-type": "text/csv",
+            "description": "Similarity scores between query samples and reference databases.",
+            "mime-type": "text/tab-separated-values",
+            "optional": false,
+            "type": "aggregated"
+        },
+        "jaccard-pairwise": {
+            "filepath": "*/jaccard_score_pairwise.tsv",
+            "title": "Pairwise Jaccard Scores",
+            "description": "Pairwise similarity scores between all samples.",
+            "mime-type": "text/tab-separated-values",
+            "optional": false,
+            "type": "aggregated"
+        },
+        "workflow-report": {
+            "filepath": "genome_similarity_report.html",
+            "title": "Workflow Report",
+            "description": "HTML report displaying genome similarity results.",
+            "mime-type": "text/html",
             "optional": false,
             "type": "aggregated"
         }
