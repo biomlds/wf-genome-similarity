@@ -115,8 +115,7 @@ process generateReport {
 
     script:
     """
-    export PYTHONPATH=\$PWD/bin:\$PYTHONPATH
-    python3 -m workflow_glue genome_similarity_report genome_similarity_report.html \
+    workflow-glue genome_similarity_report genome_similarity_report.html \
         --jaccard_scores ${results_dir}/EnterobaseSalmWGMLSTscheme_k31_20220315/jaccard_score.tsv \
         --jaccard_pairwise ${results_dir}/EnterobaseSalmWGMLSTscheme_k31_20220315/jaccard_score_pairwise.tsv \
         --params ${params_json} \
