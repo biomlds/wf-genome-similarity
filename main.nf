@@ -63,6 +63,7 @@ process runMentalist {
 
     # Copy contents directly, not the results directory
     cp -a output_mount/* .
+    rm -rf output_mount
     """
 }
 
