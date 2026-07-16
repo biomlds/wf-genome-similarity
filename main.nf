@@ -44,7 +44,9 @@ process runMentalist {
         path preprocessed_dir
 
     output:
-        path "*", emit: results
+        path "*", emit: all
+        path "**/jaccard_score.tsv", emit: jaccard
+        path "**/jaccard_score_pairwise.tsv", emit: pairwise
 
     script:
     """
@@ -106,7 +108,8 @@ process generateReport {
     publishDir "${params.out_dir}/${params.project_name}", mode: 'copy', pattern: "genome_similarity_report.html"
 
     input:
-        path results_dir
+        path jaccard_tsv
+        path pairwise_tsv
         path params_json
         path versions
 
@@ -116,8 +119,8 @@ process generateReport {
     script:
     """
     workflow-glue genome_similarity_report genome_similarity_report.html \
-        --jaccard_scores ${results_dir}/EnterobaseSalmWGMLSTscheme_k31_20220315/jaccard_score.tsv \
-        --jaccard_pairwise ${results_dir}/EnterobaseSalmWGMLSTscheme_k31_20220315/jaccard_score_pairwise.tsv \
+        --jaccard_scores ${jaccard_tsv} \
+        --jaccard_pairwise ${pairwise_tsv} \
         --params ${params_json} \
         --versions ${versions} \
         --wf_version ${workflow.manifest.version}
@@ -148,12 +151,13 @@ workflow {
     getParams()
     
     generateReport(
-        runMentalist.out.results,
+        runMentalist.out.jaccard,
+        runMentalist.out.pairwise,
         getParams.out,
         getVersions.out
     )
     
-    runMentalist.out.results
+    runMentalist.out.all
         .subscribe { results ->
             println "Results published to: ${params.out_dir}/${params.project_name}"
         }
