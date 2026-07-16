@@ -111,8 +111,6 @@ process generateReport {
     input:
         path jaccard_tsv
         path pairwise_tsv
-        path params_json
-        path versions
 
     output:
         path "genome_similarity_report.html"
@@ -121,10 +119,7 @@ process generateReport {
     """
     workflow-glue genome_similarity_report genome_similarity_report.html \
         --jaccard_scores ${jaccard_tsv} \
-        --jaccard_pairwise ${pairwise_tsv} \
-        --params ${params_json} \
-        --versions ${versions} \
-        --wf_version ${workflow.manifest.version}
+        --jaccard_pairwise ${pairwise_tsv}
     """
 }
 
@@ -153,9 +148,7 @@ workflow {
     
     generateReport(
         runMentalist.out.jaccard,
-        runMentalist.out.pairwise,
-        getParams.out,
-        getVersions.out
+        runMentalist.out.pairwise
     )
     
     runMentalist.out.all
