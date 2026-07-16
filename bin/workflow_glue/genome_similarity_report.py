@@ -61,9 +61,9 @@ def main(args):
     <p>Similarity scores between query samples and reference databases.</p>
     {jaccard_table}
 
-    <h2>Pairwise Jaccard Scores</h2>
-    <p>Pairwise similarity scores between all samples.</p>
-    {pairwise_table}
+    # <h2>Pairwise Jaccard Scores</h2>
+    # <p>Pairwise similarity scores between all samples.</p>
+    # {pairwise_table}
 </body>
 </html>"""
 
